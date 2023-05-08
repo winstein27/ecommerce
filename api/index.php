@@ -13,7 +13,7 @@ $resource = explode("/", $path)[2];
 
 $method = $_SERVER["REQUEST_METHOD"];
 
-if($resource != "products" || ($method != "GET" && $method != "POST")) {
+if($resource != "products") {
     http_response_code(404);
     exit;
 }
