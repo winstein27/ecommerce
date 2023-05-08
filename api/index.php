@@ -13,12 +13,12 @@ $resource = explode("/", $path)[2];
 
 $method = $_SERVER["REQUEST_METHOD"];
 
+header("Content-type: application/json; charset:UTF-8");
+
 if($resource != "products") {
     http_response_code(404);
     exit;
 }
-
-header("Content-type: application/json; charset:UTF-8");
 
 $database = new Database($_ENV["DB_HOST"], $_ENV["DB_PORT"], $_ENV["DB_NAME"], $_ENV["DB_USER"], $_ENV["DB_PASSWORD"]);
 $database->getConnection();
