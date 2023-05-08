@@ -15,7 +15,7 @@ $method = $_SERVER["REQUEST_METHOD"];
 
 header("Content-type: application/json; charset:UTF-8");
 
-if($resource != "products") {
+if ($resource != "products") {
     http_response_code(404);
     exit;
 }

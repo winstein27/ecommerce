@@ -1,12 +1,13 @@
 <?php
-class ProductController {
+class ProductController
+{
     public function __construct(private ProductGateway $gateway)
     {
     }
 
-    public function processRequest(string $method):void
+    public function processRequest(string $method): void
     {
-        if($method == "GET") {
+        if ($method == "GET") {
             echo json_encode($this->gateway->getAll());
         } elseif ($method == "POST") {
             $product = (array) json_decode(file_get_contents("php://input"), true);

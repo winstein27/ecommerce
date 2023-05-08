@@ -1,6 +1,7 @@
 <?php
 
-class ProductGateway {
+class ProductGateway
+{
     private PDO $conn;
 
     public function __construct(Database $database)
@@ -27,25 +28,20 @@ class ProductGateway {
         $stmt->bindValue(":name", $product["name"], PDO::PARAM_STR);
         $stmt->bindValue(":price", $product["price"], PDO::PARAM_INT);
         $stmt->bindValue(":type", $product["type"], PDO::PARAM_STR);
-        
-        if ($product["type"] == "book")
-        {
+
+        if ($product["type"] == "book") {
             $stmt->bindValue(":weight", $product["weight"], PDO::PARAM_INT);
             $stmt->bindValue(":size", null, PDO::PARAM_NULL);
             $stmt->bindValue(":height", null, PDO::PARAM_NULL);
             $stmt->bindValue(":width", null, PDO::PARAM_NULL);
             $stmt->bindValue(":length", null, PDO::PARAM_NULL);
-                
-        } elseif ($product["type"] == "dvd")
-        {
+        } elseif ($product["type"] == "dvd") {
             $stmt->bindValue(":weight", null, PDO::PARAM_NULL);
             $stmt->bindValue(":size", $product["size"], PDO::PARAM_INT);
             $stmt->bindValue(":height", null, PDO::PARAM_NULL);
             $stmt->bindValue(":width", null, PDO::PARAM_NULL);
             $stmt->bindValue(":length", null, PDO::PARAM_NULL);
-            
-        } elseif ($product["type"] == "furniture")
-        {
+        } elseif ($product["type"] == "furniture") {
             $stmt->bindValue(":weight", null, PDO::PARAM_NULL);
             $stmt->bindValue(":size", null, PDO::PARAM_NULL);
             $stmt->bindValue(":height", $product["height"], PDO::PARAM_INT);
