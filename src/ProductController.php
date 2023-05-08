@@ -1,8 +1,13 @@
 <?php
 class ProductController {
-    public function processRequest(string $method): void {
+    public function __construct(private ProductGateway $gateway)
+    {
+    }
+
+    public function processRequest(string $method):void
+    {
         if($method == "GET") {
-            echo "get list";
+            echo json_encode($this->gateway->getAll());
         } elseif ($method == "POST") {
             echo "add new";
         } else {

@@ -23,5 +23,7 @@ header("Content-type: application/json; charset:UTF-8");
 $database = new Database($_ENV["DB_HOST"], $_ENV["DB_PORT"], $_ENV["DB_NAME"], $_ENV["DB_USER"], $_ENV["DB_PASSWORD"]);
 $database->getConnection();
 
-$controller = new ProductController;
+$gateway = new ProductGateway($database);
+
+$controller = new ProductController($gateway);
 $controller->processRequest($method);
