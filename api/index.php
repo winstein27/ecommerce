@@ -16,6 +16,7 @@ $resource = explode("/", $path)[2];
 
 $method = $_SERVER["REQUEST_METHOD"];
 
+header("Access-Control-Allow-Origin: *");
 header("Content-type: application/json; charset:UTF-8");
 
 if ($resource != "products") {
