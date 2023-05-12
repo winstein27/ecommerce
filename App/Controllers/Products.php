@@ -6,7 +6,7 @@ class Products extends Controller
 {
     public function index()
     {
-        $productModel = $this->model("Product");
+        $productModel = $this->createModel("Product");
 
         $products = $productModel->getAll();
         if (!$products) {
@@ -19,8 +19,16 @@ class Products extends Controller
 
     public function store()
     {
-        $body = $this->getRequestBody();
-        $productModel = $this->model("Product");
+        $product = $this->getRequestBody();
+        // $productModel = $this->model("Product");
+
+        $errors = $this->getAddProductValidationErrors($product);
+
+        if (!empty($errors)) {
+            http_response_code(422);
+            echo json_encode((["errors" => $errors]));
+            return;
+        }
 
         // $checkSku = $productModel->findBySku($body->sku);
 
@@ -30,43 +38,110 @@ class Products extends Controller
         //     exit;
         // }
 
-        $modelByType = $this->model($body->type);
+        echo $product["type"];
+        $modelByType = $this->createModel("Book");
 
-        $modelByType->setName($body->name);
-        $modelByType->setPrice(floatval($body->price));
-        $modelByType->setSku($body->sku);
-        $modelByType->setType($body->type);
-        $modelByType->setAttributes($body);
+        echo $modelByType;
 
-        $modelByType = $modelByType->create();
+        $modelByType->setSku($product["sku"]);
+        $modelByType->setName($product["name"]);
+        $modelByType->setPrice(floatval($product["price"]));
+        $modelByType->setType($product["type"]);
+        $modelByType->setAttributes($product);
+
+
+        $addedProduct = $modelByType->addProduct();
+
+
 
         if ($modelByType) {
             http_response_code(201);
-            echo json_encode($body);
+            echo json_encode($addedProduct);
             return;
         };
-
-        http_response_code(500);
     }
 
-    public function deleteMany()
-    {
-        $body = $this->getRequestBody();
-        $productModel = $this->model("Product");
+    // public function deleteMany()
+    // {
+    //     $body = $this->getRequestBody();
+    //     $productModel = $this->model("Product");
 
-        if (count($body->ids) === 0) {
-            http_response_code(400);
-            echo json_encode(["Error" => "No product selected"]);
-            return;
+    //     if (count($body->ids) === 0) {
+    //         http_response_code(400);
+    //         echo json_encode(["Error" => "No product selected"]);
+    //         return;
+    //     }
+
+    //     foreach ($body->ids as $id) {
+    //         $checkProduct = $productModel->findById($id);
+    //         if ($checkProduct) {
+    //             $productModel->delete($id);
+    //         }
+    //     }
+    //     http_response_code(204);
+    //     echo json_encode(["Success" => "Products deleted"]);
+    // }
+
+    private function getAddProductValidationErrors($data)
+    {
+        $errors = [];
+
+        if (empty($data["sku"])) {
+            $errors[] = "SKU is required.";
         }
 
-        foreach ($body->ids as $id) {
-            $checkProduct = $productModel->findById($id);
-            if ($checkProduct) {
-                $productModel->delete($id);
+        if (empty($data["name"])) {
+            $errors[] = "Name is required.";
+        }
+
+        if (empty($data["price"])) {
+            $errors[] = "Price is required.";
+        } else {
+            if (filter_var($data["price"], FILTER_VALIDATE_FLOAT) == false) {
+                $errors[] = "Price must be a number.";
             }
         }
-        http_response_code(204);
-        echo json_encode(["Success" => "Products deleted"]);
+
+        if (empty($data["type"])) {
+            $errors[] = "Type is required.";
+        } else {
+            if ($data["type"] == "book") {
+                if (empty($data["weight"])) {
+                    $errors[] = "Weight is required for books.";
+                } else if (filter_var($data["weight"], FILTER_VALIDATE_FLOAT) == false) {
+                    $errors[] = "Weight must be a number.";
+                }
+            }
+
+            if ($data["type"] == "dvd") {
+                if (empty($data["size"])) {
+                    $errors[] = "Size is required for DVDs.";
+                } else if (filter_var($data["size"], FILTER_VALIDATE_FLOAT) == false) {
+                    $errors[] = "Size must be a number.";
+                }
+            }
+
+            if ($data["type"] == "furniture") {
+                if (empty($data["height"])) {
+                    $errors[] = "Height is required for fornitures.";
+                } else if (filter_var($data["height"], FILTER_VALIDATE_FLOAT) == false) {
+                    $errors[] = "Height must be a number.";
+                }
+
+                if (empty($data["width"])) {
+                    $errors[] = "Width is required for fornitures.";
+                } else if (filter_var($data["width"], FILTER_VALIDATE_FLOAT) == false) {
+                    $errors[] = "Width must be a number.";
+                }
+
+                if (empty($data["length"])) {
+                    $errors[] = "Length is required for fornitures.";
+                } else if (filter_var($data["length"], FILTER_VALIDATE_FLOAT) == false) {
+                    $errors[] = "Length must be a number.";
+                }
+            }
+        }
+
+        return $errors;
     }
 }

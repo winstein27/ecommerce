@@ -38,16 +38,10 @@ class Router
 
             case "POST":
                 $this->controllerMethod = "store";
+                break;
 
             case "DELETE":
                 $this->controllerMethod = "delete";
-                if (isset($url[3]) && is_numeric($url[3])) {
-                    $this->params = [$url[3]];
-                } else {
-                    http_response_code(400);
-                    echo json_encode(["Error" => "IDs are required."]);
-                    exit;
-                }
                 break;
 
             default:

@@ -2,7 +2,7 @@
 
 use App\Core\Database;
 
-class DVD extends Product
+class Dvd extends Product
 {
     public function addProduct(): Product
     {

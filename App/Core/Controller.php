@@ -4,19 +4,21 @@ namespace App\Core;
 
 abstract class Controller
 {
-    public function model($model)
+    protected function createModel($model)
     {
         $lowerCaseType = strtolower($model);
         $modelType = ucwords($lowerCaseType);
         require_once "../App/Models/" . $modelType . ".php";
+        echo "../App/Models/" . $modelType . ".php";
 
-        return new $model;
+
+        return new $modelType;
     }
 
     protected function getRequestBody()
     {
         $json = file_get_contents("php://input");
-        $obj = json_decode($json);
+        $obj = (array) json_decode($json, true);
 
         return $obj;
     }
