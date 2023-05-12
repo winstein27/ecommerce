@@ -1,12 +1,15 @@
 <?php
 
-namespace app\core;
+namespace App\Core;
 
-class Controller
+abstract class Controller
 {
     public function model($model)
     {
-        require_once "../app/models/" . $model . ".php";
+        $lowerCaseType = strtolower($model);
+        $modelType = ucwords($lowerCaseType);
+        require_once "../App/Models/" . $modelType . ".php";
+
         return new $model;
     }
 
