@@ -9,8 +9,6 @@ abstract class Controller
         $lowerCaseType = strtolower($model);
         $modelType = ucwords($lowerCaseType);
         require_once "../App/Models/" . $modelType . ".php";
-        echo "../App/Models/" . $modelType . ".php";
-
 
         return new $modelType;
     }
