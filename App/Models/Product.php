@@ -101,10 +101,10 @@ class Product
 
     public function massDelete(array $ids): void
     {
-        $sql = "DELETE FROM product WHERE id IN ?";
+        $idsStr = implode(", ", $ids);
+        $sql = "DELETE FROM product WHERE id IN (" . $idsStr . ")";
 
         $stmt = Database::getConn()->prepare($sql);
-        $stmt->bindValue(1, $ids);
         $stmt->execute();
     }
 }

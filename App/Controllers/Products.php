@@ -55,26 +55,22 @@ class Products extends Controller
         };
     }
 
-    // public function deleteMany()
-    // {
-    //     $body = $this->getRequestBody();
-    //     $productModel = $this->model("Product");
+    public function deleteMany()
+    {
+        $body = $this->getRequestBody();
+        $productModel = $this->createModel("Product");
 
-    //     if (count($body->ids) === 0) {
-    //         http_response_code(400);
-    //         echo json_encode(["Error" => "No product selected"]);
-    //         return;
-    //     }
+        if (!$body || !property_exists($body, "ids") || empty($body->ids)) {
+            http_response_code(400);
+            echo json_encode(["error" => "IDs are required."]);
+            return;
+        }
 
-    //     foreach ($body->ids as $id) {
-    //         $checkProduct = $productModel->findById($id);
-    //         if ($checkProduct) {
-    //             $productModel->delete($id);
-    //         }
-    //     }
-    //     http_response_code(204);
-    //     echo json_encode(["Success" => "Products deleted"]);
-    // }
+        $productModel->massDelete($body->ids);
+
+        http_response_code(202);
+        echo json_encode(["success" => "Products deleted."]);
+    }
 
     private function getAddProductValidationErrors($data)
     {

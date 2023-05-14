@@ -41,7 +41,7 @@ class Router
                 break;
 
             case "DELETE":
-                $this->controllerMethod = "delete";
+                $this->controllerMethod = "deleteMany";
                 break;
 
             default:
