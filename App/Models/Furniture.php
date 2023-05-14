@@ -1,15 +1,19 @@
 <?php
 
+include_once "../App/Models/Product.php";
+
 use App\Core\Database;
 
 class Furniture extends Product
 {
-    public function addProduct(): Product
+    public function addProduct()
     {
         $sql = "INSERT INTO product (sku, name, price, type, height, width, length)
         VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        $stmt = Database::getConn()->prepare($sql);
+        $conn = Database::getConn();
+
+        $stmt = $conn->prepare($sql);
 
         $stmt->bindValue(1, $this->getSku());
         $stmt->bindValue(2, $this->getName());
@@ -19,9 +23,7 @@ class Furniture extends Product
         $stmt->bindValue(6, $this->getAttribute('width'));
         $stmt->bindValue(7, $this->getAttribute('length'));
 
-        if ($stmt->execute()) {
-            return $this;
-        }
-        return null;
+        $stmt->execute();
+        return $conn->lastInsertId();
     }
 }

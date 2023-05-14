@@ -1,15 +1,19 @@
 <?php
 
+include_once "../App/Models/Product.php";
+
 use App\Core\Database;
 
 class Dvd extends Product
 {
-    public function addProduct(): Product
+    public function addProduct()
     {
-        $sql = 'INSERT INTO products (sku, name, price, type, size)
+        $sql = 'INSERT INTO product (sku, name, price, type, size)
         VALUES (?, ?, ?, ?, ?)';
 
-        $stmt = Database::getConn()->prepare($sql);
+        $conn = Database::getConn();
+
+        $stmt = $conn->prepare($sql);
 
         $stmt->bindValue(1, $this->getSku());
         $stmt->bindValue(2, $this->getName());
@@ -17,9 +21,7 @@ class Dvd extends Product
         $stmt->bindValue(4, $this->getType());
         $stmt->bindValue(5, $this->getAttribute('size'));
 
-        if ($stmt->execute()) {
-            return $this;
-        }
-        return null;
+        $stmt->execute();
+        return $conn->lastInsertId();
     }
 }

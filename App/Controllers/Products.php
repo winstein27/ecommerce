@@ -19,10 +19,10 @@ class Products extends Controller
 
     public function store()
     {
-        $product = $this->getRequestBody();
-        // $productModel = $this->model("Product");
+        $body = $this->getRequestBody();
 
-        $errors = $this->getAddProductValidationErrors($product);
+        $bodyArr = (array) $body;
+        $errors = $this->getAddProductValidationErrors($bodyArr);
 
         if (!empty($errors)) {
             http_response_code(422);
@@ -38,25 +38,20 @@ class Products extends Controller
         //     exit;
         // }
 
-        echo $product["type"];
-        $modelByType = $this->createModel("Book");
+        $modelByType = $this->createModel($body->type);
 
-        echo $modelByType;
-
-        $modelByType->setSku($product["sku"]);
-        $modelByType->setName($product["name"]);
-        $modelByType->setPrice(floatval($product["price"]));
-        $modelByType->setType($product["type"]);
-        $modelByType->setAttributes($product);
+        $modelByType->setSku($body->sku);
+        $modelByType->setName($body->name);
+        $modelByType->setPrice(floatval($body->price));
+        $modelByType->setType($body->type);
+        $modelByType->setAttributes($body);
 
 
-        $addedProduct = $modelByType->addProduct();
-
-
+        $addedProductId = $modelByType->addProduct();
 
         if ($modelByType) {
             http_response_code(201);
-            echo json_encode($addedProduct);
+            echo json_encode(["productId" => $addedProductId]);
             return;
         };
     }

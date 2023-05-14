@@ -16,8 +16,6 @@ abstract class Controller
     protected function getRequestBody()
     {
         $json = file_get_contents("php://input");
-        $obj = (array) json_decode($json, true);
-
-        return $obj;
+        return json_decode($json);
     }
 }
