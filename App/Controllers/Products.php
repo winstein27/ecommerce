@@ -30,22 +30,21 @@ class Products extends Controller
             return;
         }
 
-        // $checkSku = $productModel->findBySku($body->sku);
-
-        // if ($checkSku) {
-        //     http_response_code(400);
-        //     echo json_encode(["Error" => "Product already registered"]);
-        //     exit;
-        // }
-
         $modelByType = $this->createModel($body->type);
+
+        $productBySku = $modelByType->findBySku($body->sku);
+
+        if ($productBySku) {
+            http_response_code(422);
+            echo json_encode(["error" => "Product sku already registered.", "product" => $productBySku]);
+            return;
+        }
 
         $modelByType->setSku($body->sku);
         $modelByType->setName($body->name);
         $modelByType->setPrice(floatval($body->price));
         $modelByType->setType($body->type);
         $modelByType->setAttributes($body);
-
 
         $addedProductId = $modelByType->addProduct();
 

@@ -73,12 +73,30 @@ class Product
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
-            $resultado = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $products = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-            return $resultado;
+            return $products;
         } else {
             return [];
         }
+    }
+
+    public function findBySku(string $sku)
+    {
+        $sql = "SELECT * FROM product WHERE sku=?";
+
+        $stmt = Database::getConn()->prepare($sql);
+        $stmt->bindValue(1, $sku);
+
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $product = $stmt->fetchAll(PDO::FETCH_OBJ)[0];
+
+            return $product;
+        }
+
+        return null;
     }
 
     public function massDelete(array $ids): void
