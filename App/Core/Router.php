@@ -18,7 +18,7 @@ class Router
             $this->controller = $url[1];
             unset($url[1]);
         } elseif (empty($url[1])) {
-            echo ('Scandiweb API');
+            echo json_encode('Scandiweb API');
             exit;
         } else {
             http_response_code(404);
@@ -42,6 +42,11 @@ class Router
 
             case "DELETE":
                 $this->controllerMethod = "deleteMany";
+                break;
+
+            case "OPTIONS":
+                http_response_code(200);
+                exit;
                 break;
 
             default:

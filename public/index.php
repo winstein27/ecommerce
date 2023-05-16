@@ -13,8 +13,10 @@ if (file_exists('../.env')) {
     $dotenv->load();
 }
 
-header("Content-type: application/json; charset:UTF-8");
-header('Access-Control-Allow-Origin: *');
-header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 
 new App\Core\Router();
