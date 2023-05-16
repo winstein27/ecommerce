@@ -37,12 +37,17 @@ class Router
                 break;
 
             case "POST":
-                $this->controllerMethod = "store";
+                if(empty($url[2]))
+                {
+                    $this->controllerMethod = "store";
+                } elseif($url[2] == "massDelete") {
+                    $this->controllerMethod = "deleteMany";
+                } else {
+                    http_response_code(404);
+                    echo json_encode(["error" => "Resource not found."]);
+                }
                 break;
-
-            case "DELETE":
-                $this->controllerMethod = "deleteMany";
-                break;
+                exit;
 
             case "OPTIONS":
                 http_response_code(200);
@@ -51,7 +56,7 @@ class Router
 
             default:
                 http_response_code(405);
-                header("Allow: GET, POST, DELETE");
+                header("Allow: GET, POST");
                 exit;
                 break;
         }
